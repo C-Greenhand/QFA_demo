@@ -6,7 +6,6 @@ from demo.Modules.module1 import M1
 # from demo.Modules.module2 import M2
 from demo.Modules.module4 import M4
 from demo.Modules.module5 import M5
-from demo.Modules.module7 import M7
 from datetime import datetime
 
 
@@ -14,21 +13,13 @@ from datetime import datetime
 
 def index(request):
 
-    time_list=[]
-    #
-    # M1.reset_data()
-    # cap_list=M1.historical_backtest()
+    M1.reset_data()
+    cap_list=M1.historical_backtest()
 
+    return render(request, 'demo/index.html',{'cap_list':cap_list})
 
-    time1=M7.calculate_time1()
-    time2= M7.calculate_time2()
-
-    time_list.append(time1)
-    time_list.append(time2)
-
-
-
-
-
-    return render(request, 'demo/index.html',{'time_list':time_list})
-
+def index2(request):
+    M1.reset_data()
+    M1.historical_backtest()
+    historical_ratios=models.HISTORICAL_RATIO.objects.all()
+    return render(request, 'demo/index2.html',{'historical_ratios':historical_ratios})

@@ -7,7 +7,7 @@ from demo.models import ASSET_PRICE,FACTORY_PRICE,ZZ_500S
 
 class M4(object):
 
-    # 参数为原数据集记录数组，品种/类型id，操作类型（是填充资产历史价格表，还是填充因子历史价格表）
+    # 参数为原数据集记录数组，品种/类型id，操作类型（是填充资产历史价格表，和填充因子历史价格表）
     def get_price_by_dataSet(List,varity_or_type_id,operation_type):
 
         if(operation_type=='asset'):

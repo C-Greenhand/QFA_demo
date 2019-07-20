@@ -1,14 +1,92 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Title</title>-->
-<!--</head>-->
-<!--<body>-->
-<!-- 当前总市值：-->
-<!--    {% for i in sum_caps %}-->
-<!--    <a href="">{{i.sum_cap}} </a>-->
-<!--    </br>-->
-<!--    {% endfor %} -->
-<!--</body>-->
-<!--</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+
+<div id="container" style="width: 550px; height: 400px; margin: 0 auto"></div>
+<script language="JavaScript">
+$(document).ready(function() {
+   var title = {
+       text: '资产比例变化曲线'
+   };
+   var subtitle = {
+        text: ''
+   };
+   var xAxis = {
+      title: {
+         text: 'Date'
+      }
+   };
+   var yAxis = {
+      title: {
+         text: 'Ratio'
+      },
+      plotLines: [{
+         value: 0,
+         width: 1,
+         color: '#808080'
+      }]
+   };
+ 
+   var tooltip = {
+      valueSuffix: ' '
+   }
+ 
+   var legend = {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'middle',
+      borderWidth: 0
+   };
+ 
+   var series =  [
+      {
+         name: '股票',
+         data: 
+         [ 
+            {% for i in historical_ratios %}
+            [{{i.Stock_Ratio}}],
+            {% endfor %} 
+         ]
+      },
+      {
+         name: '期货',
+         data: 
+         [ 
+            {% for j in historical_ratios %}
+            [{{j.Futures_Ratio}}],
+            {% endfor %} 
+         ]
+      },
+      {
+         name: '债券',
+         data: 
+         [ 
+            {% for k in historical_ratios %}
+            [{{k.Bond_Ratio}}],
+            {% endfor %} 
+         ]
+      }
+      
+   ];
+ 
+   var json = {};
+ 
+   json.title = title;
+   json.subtitle = subtitle;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;
+   json.tooltip = tooltip;
+   json.legend = legend;
+   json.series = series;
+ 
+   $('#container').highcharts(json);
+});
+</script>
+</body>
+</html>

@@ -41,13 +41,13 @@ class M5(object):
             if date.weekday()!=5 and date.weekday()!=6:
                 date_2.append(item)
 
-        return date_2 # 注意date_2为字符串数组
+        return date_2 # 注意date_2为 字符串数组
 
     # 根据公共日期范围为历史价格表填充缺省日期（非周六周日）记录
     def fill_date(operae_type):
         """
         pperation_type为'asset':对资产历史价格表进行处理
-                      为'factory':对资产历史价格表进行处理
+                      为'factory':对因子历史价格表进行处理
         """
         date_list=M5.get_date_range('20110418','20181228')
 

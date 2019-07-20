@@ -29,14 +29,9 @@ class ASSET_TYPE(models.Model):
 # 资产品种表
 class ASSET_VARITY(models.Model):
     name=models.CharField(max_length=64,default='null') # 资产品种名称
-    asset_type = models.ForeignKey('ASSET_TYPE', on_delete=models.CASCADE,related_name='varity_type') # 资产类型（外键）
+    asset_type = models.ForeignKey('ASSET_TYPE', on_delete=models.CASCADE) # 资产类型（外键）
     amount = models.DecimalField(max_digits=15, decimal_places=3,default=0) # 持仓数量
     cap=models.DecimalField(max_digits=15, decimal_places=3,default=0) # 资产值
-
-    @property
-    def all_prices(self):
-        return price_varity.all()
-
 
 
 # 由于债券的占比，收益计算方式特殊，所以专门设置一表进行存储
@@ -48,7 +43,7 @@ class BOND(models.Model):
 class ASSET_PRICE(models.Model):
     date = models.DateField()  # 日期
     price=models.DecimalField(max_digits=15,decimal_places=3) # 价格
-    asset_varity = models.ForeignKey('ASSET_VARITY',on_delete=models.CASCADE, related_name='price_varity') # 资产品种（外键）
+    asset_varity = models.ForeignKey('ASSET_VARITY', on_delete=models.CASCADE) # 资产品种（外键）
 
 # 权重表，注意不含因子与债券的关系
 class WEIGHT(models.Model):
@@ -110,9 +105,12 @@ class ZZ_500S(models.Model):
     date=models.DateField()
     close=models.DecimalField(max_digits=15,decimal_places=3,default=0)
 
-
-
-
+#历史资产比例记录表
+class HISTORICAL_RATIO(models.Model):
+    Stock_Ratio=models.DecimalField(max_digits=15,decimal_places=3,default=0)
+    Futures_Ratio=models.DecimalField(max_digits=15,decimal_places=3,default=0)
+    Bond_Ratio=models.DecimalField(max_digits=15,decimal_places=3,default=0)
+    
 
 
 
