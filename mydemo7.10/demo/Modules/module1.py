@@ -7,14 +7,12 @@ from decimal import Decimal
 本模块负责与资产有关的操作
 """
 
-
-
 """ 
 假设时间单元为N天，最后一天为M
 day1   dayN    day2N......dayM-1  dayM   
-f1     f3      f3         f3      f3
-f2     f1      f1         f1
-       f2      f2         f2
+f3     f3      f3         f3      f3
+f1     f1      f1         f1
+f2     f2      f2         f2
 
 """
 
@@ -41,8 +39,8 @@ class M1(object):
                 asset_ratio+=exchange_rate*item2.value
 
             # 更新ratio
-            #ASSET_TYPE.objects.filter(id=item.id).update(ratio=asset_ratio)
-            ASSET_TYPE.objects.filter(id=item.id).update(ratio=0)
+            ASSET_TYPE.objects.filter(id=item.id).update(ratio=asset_ratio)
+            #ASSET_TYPE.objects.filter(id=item.id).update(ratio=0.02)
 
         for item in ASSET_TYPE.objects.all():
 
@@ -109,9 +107,10 @@ class M1(object):
 
             #更新各资产对应的数量
             for item3 in ASSET_VARITY.objects.filter(asset_type_id=item2.id):
-                item_varity_price=ASSET_PRICE.objects.filter(asset_varity_id=item2.id).get(date=current_date).price
+                item_varity_price=ASSET_PRICE.objects.filter(asset_varity_id=item3.id).get(date=current_date).price
                 item_varity_amount=item3.cap/item_varity_price
                 ASSET_VARITY.objects.filter(asset_type_id=item2.id).filter(id=item3.id).update(amount=item_varity_amount)
+                #print(item_varity_amount)
 
         # sum_ratio>1时，调整为1
         if sum_ratio>1:
@@ -186,24 +185,6 @@ class M1(object):
             if index==0:
                 former_date=historical_date_list[index] 
 
-            # 到达第一个时间单元，执行f1,f2
-            elif index==1:
-    
-                # 更新current_date
-                current_date=historical_date_list[index]
-
-                # 执行f1，f2
-                M1.update_asset_ratio(former_date,current_date)
-
-                # 测试
-                current_sum_cap = COMMON_INFORMATION.objects.get(id=1).sum_cap
-                cap_list.append(current_sum_cap)
-
-                M1.position_adjust(current_date) 
-
-                # 更新former_date
-                former_date=current_date
-
             # 中间过程：每到达一个时间单元，执行f3，f1，f2
             elif index<len(historical_date_list)-1:
 
@@ -250,7 +231,7 @@ class M1(object):
         ASSET_VARITY.objects.all().update(cap=0, amount=0)
 
         # BOND表重置
-        BOND.objects.all().update(cap=0,ratio=0)
+        BOND.objects.all().update(cap=10000000,ratio=1)
 
         # FACTORY_TYPE表重置
         FACTORY_TYPE.objects.all().update(exchange_rate=0)
@@ -259,8 +240,8 @@ class M1(object):
         COMMON_INFORMATION.objects.all().update(sum_cap=0,income=0)
 
         # 默认开始时间和结束时间分别为'2018-2-10'和'2018-12-28'
-        default_start_date = datetime.strptime('2014-10-1', '%Y-%m-%d')
-        default_end_date = datetime.strptime('2014-12-31', '%Y-%m-%d')
+        default_start_date = datetime.strptime('2018-10-2', '%Y-%m-%d')
+        default_end_date = datetime.strptime('2018-10-10', '%Y-%m-%d')
         COMMON_INFORMATION.objects.all().update(start_date=default_start_date,end_date=default_end_date)
 
         # 默认初始资本为1000万
